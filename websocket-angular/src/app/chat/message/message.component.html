@@ -1,14 +1,14 @@
 <div class="card">
-    <div class="card-content">
-        <div class="media">
-            <div class="media-content">
-                <p class="title is-4">{{message.author}}</p>
-                <p class="subtitle is-6">{{message.timestamp}}</p>
+    <div class="card-content p-2">
+        <div class="media pb-1 mb-0">
+            <div class="media-content level">
+                <p class="level-left title is-4 pb-0 mb-0">{{message_shown.author}}</p>
+                <p class="level-right subtitle is-6 pb-0 mb-0">{{message_shown.timestamp}}</p>
             </div>
         </div>
 
-        <div class="content">
-            {{message.body}}
+        <div class="content pt-1">
+            {{message_shown.message}}
         </div>
     </div>
 </div>

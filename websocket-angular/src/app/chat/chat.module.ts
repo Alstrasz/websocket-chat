@@ -4,6 +4,7 @@ import { MessageComponent } from './message/message.component';
 import { WindowComponent } from './window/window.component';
 import { SendMessageComponent } from './send-message/send-message.component';
 import { MessageCollectionComponent } from './message-collection/message-collection.component';
+import { FormsModule } from '@angular/forms';
 
 
 @NgModule( {
@@ -15,6 +16,7 @@ import { MessageCollectionComponent } from './message-collection/message-collect
     ],
     imports: [
         CommonModule,
+        FormsModule,
     ],
     exports: [
         WindowComponent,

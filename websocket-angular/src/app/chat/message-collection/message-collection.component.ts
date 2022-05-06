@@ -1,5 +1,6 @@
 import { Component, OnInit } from '@angular/core';
-import { Message } from '../types/message.iterface';
+import { ChatService } from '../chat.service';
+import { IncomingMessageDto } from '../types/incoming_message.dto';
 
 @Component( {
     selector: 'chat-message-collection',
@@ -7,48 +8,15 @@ import { Message } from '../types/message.iterface';
     styleUrls: ['./message-collection.component.sass'],
 } )
 export class MessageCollectionComponent implements OnInit {
-    messages: Array<Message> = [
-        {
-            author: 'u1',
-            timestamp: 0,
-            body: 'm1',
-        },
-        {
-            author: 'u1',
-            timestamp: 1,
-            body: 'm2',
-        },
-        {
-            author: 'u1',
-            timestamp: 2,
-            body: 'm3',
-        },
-        {
-            author: 'u1',
-            timestamp: 3,
-            body: 'm4',
-        },{
-            author: 'u1',
-            timestamp: 0,
-            body: 'm1',
-        },
-        {
-            author: 'u1',
-            timestamp: 1,
-            body: 'm2',
-        },
-        {
-            author: 'u1',
-            timestamp: 2,
-            body: 'm3',
-        },
-        {
-            author: 'u1',
-            timestamp: 3,
-            body: 'm4',
-        },
-    ];
-    constructor () { }
+    messages: Array<IncomingMessageDto> = [];
+
+    constructor ( private chat_service: ChatService ) {
+        chat_service.messages.subscribe( ( msg ) => {
+            if ( msg.event == 'message' ) {
+                this.messages.unshift( msg.data as IncomingMessageDto );
+            }
+        } );
+    }
 
     ngOnInit (): void {
     }

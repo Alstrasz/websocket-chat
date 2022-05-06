@@ -1,5 +1,5 @@
 import { Component, Input, OnChanges, OnInit, SimpleChanges } from '@angular/core';
-import { Message } from '../types/message.iterface';
+import { IncomingMessageDto } from '../types/incoming_message.dto';
 
 @Component( {
     selector: 'chat-message',
@@ -7,12 +7,12 @@ import { Message } from '../types/message.iterface';
     styleUrls: ['./message.component.sass'],
 } )
 export class MessageComponent implements OnInit, OnChanges {
-    @Input() message!: Message;
+    @Input() message!: IncomingMessageDto;
 
     message_shown = {
         author: '',
         timestamp: '',
-        body: '',
+        message: '',
     };
 
     constructor () { }
@@ -27,7 +27,7 @@ export class MessageComponent implements OnInit, OnChanges {
 
     create_message_shown (): void {
         this.message_shown.author = this.message.author;
-        this.message_shown.body = this.message.body;
+        this.message_shown.message = this.message.message;
         this.message_shown.timestamp = new Date( this.message.timestamp * 1000 ).toLocaleString();
     }
 }
