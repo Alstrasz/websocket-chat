@@ -3,8 +3,13 @@ import { map } from 'rxjs/operators';
 import { Observable, Observer, Subject } from 'rxjs';
 import { AnonymousSubject } from 'rxjs/internal/Subject';
 import { WsMessage } from './types/ws_message.interface';
+import { environment } from '../../environments/environment';
+import * as axios from 'axios';
 
-const CHAT_URL = 'ws://localhost:8000';
+
+const CHAT_URL = environment.wsUrl;
+const API_URL = environment.apiUrl;
+
 
 @Injectable( {
     providedIn: 'root',
@@ -52,5 +57,20 @@ export class ChatService {
             },
         };
         return new AnonymousSubject<MessageEvent>( observer, observable );
+    }
+
+    async get_all_rooms (): Promise<Array<string>> {
+        return axios.default( {
+            baseURL: API_URL,
+            url: '/rooms/all',
+            method: 'get',
+        } )
+            .then( ( res ) => {
+                return res.data;
+            } )
+            .catch( ( err ) => {
+                console.log( err );
+                throw err;
+            } );
     }
 }

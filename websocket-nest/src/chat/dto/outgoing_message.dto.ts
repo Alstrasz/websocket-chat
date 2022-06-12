@@ -2,6 +2,7 @@ export class OutgoingMessageDto {
     data: {
         author: string;
         message: string;
+        room: string;
         timestamp: number;
     };
     event: string;
@@ -16,4 +17,5 @@ interface OutgoingMessageData {
     author: string;
     message: string;
     timestamp: number;
+    room: string;
 }

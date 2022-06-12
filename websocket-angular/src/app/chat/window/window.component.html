@@ -1,8 +1,41 @@
-<div style="height: 100vh;">
+<!--<div style="height: 100vh;">
     <div class="box message_display" >
         <chat-message-collection></chat-message-collection>
     </div>
     <div class="box message_input p-0">
         <chat-send-message></chat-send-message>
+    </div>
+</div>
+-->
+<div class="tile is-ancestor">
+    <div class="tile is-parent is-2 pb-0 mb-0">
+        <article class="tile is-child box has-background-warning" style="height: 100vh; overflow: auto;">
+            <aside class="menu">
+                <p class="menu-label">
+                    Groups
+                </p>
+                <ul class="menu-list">
+                    <li *ngFor="let room of rooms" >
+                        <a [ngClass]="{'is-active': room == active_room}" (click)="set_room_active(room)">
+                            {{room}}
+                        </a>
+                    </li>
+                </ul>
+            </aside>
+        </article>
+    </div>
+    <div class="tile is-vertical is-10 pb-0 mb-0">
+        <div class="tile">
+            <div class="tile is-parent is-vertical pb-0 mb-0">
+                <article class="tile is-child box has-background-primary is" style="overflow: auto;">
+                    <div *ngFor="let room of rooms">
+                        <chat-message-collection [ngClass]="{'is-hidden': room != active_room}" [room_name]="room"></chat-message-collection>
+                    </div>
+                </article>
+                <article class="tile is-child box has-background-info is-12">
+                    <chat-send-message [active_room_name]="active_room"></chat-send-message>
+                </article>
+            </div>
+        </div>
     </div>
 </div>

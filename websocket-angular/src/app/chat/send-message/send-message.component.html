@@ -1,13 +1,13 @@
 <div class="p-2">
-    <div class="tile is-ancestor p-0 m-0" style="height: 100%;">
+    <div class="tile is-ancestor p-0 m-0">
         <div class="tile is-9 p-0 m-0">
             <textarea class="textarea" placeholder="Hello!" [(ngModel)]="message"></textarea>
         </div>
         <div class="tile is-vertical p-0 m-0">
-            <article class="tile is-child notification p-0 m-0 has-background-white">
+            <article class="tile is-child p-0 m-0">
                 <input class="input" type="text" placeholder="Username" [(ngModel)]="username">
             </article>
-            <article class="tile is-child notification p-0 m-0 has-background-white">
+            <article class="tile is-child p-0 m-0">
                 <button class="button is-fullwidth" (click)="send_message()">Send</button>
             </article>
         </div>

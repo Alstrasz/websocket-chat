@@ -1,4 +1,5 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, Input, OnInit } from '@angular/core';
+import { OutgoingMessageDto } from '../types/outgoing_message.dto';
 import { ChatService } from '../chat.service';
 
 @Component( {
@@ -7,6 +8,7 @@ import { ChatService } from '../chat.service';
     styleUrls: ['./send-message.component.sass'],
 } )
 export class SendMessageComponent implements OnInit {
+    @Input() active_room_name: string = '';
     message: string = '';
     username: string = '';
 
@@ -24,12 +26,14 @@ export class SendMessageComponent implements OnInit {
             alert( 'Username should not be empty' );
             return;
         }
-        this.chat_service.messages.next( {
+        const message: OutgoingMessageDto = {
             data: {
                 message: this.message,
                 author: this.username,
+                room: this.active_room_name,
             },
             event: 'message',
-        } );
+        };
+        this.chat_service.messages.next( message );
     }
 }

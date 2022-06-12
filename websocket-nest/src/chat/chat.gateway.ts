@@ -5,7 +5,7 @@ import { IncomingMessageDto } from './dto/incoming_message.dto';
 import { Server, WebSocket } from 'ws';
 import { IncomingMessage } from 'http';
 
-@WebSocketGateway( 8000, { transports: ['websockets'], cors: true } )
+@WebSocketGateway( parseInt( process.env.WS_PORT || '8000' ), { transports: ['websockets'], cors: true } )
 export class ChatGateway implements OnGatewayConnection, OnGatewayDisconnect {
     connection_counter: number = 0;
     sockets: Map<WebSocket, number> = new Map();
@@ -38,6 +38,7 @@ export class ChatGateway implements OnGatewayConnection, OnGatewayDisconnect {
         const outgoing_message = new OutgoingMessageDto( {
             author: incoming_message.author,
             message: incoming_message.message,
+            room: incoming_message.room,
             timestamp: Math.floor( Date.now() / 1000 ),
         } );
         this.server.clients.forEach( ( client ) => {
