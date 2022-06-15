@@ -17,15 +17,17 @@ export class MessageCollectionComponent implements OnInit, OnDestroy {
 
     ngOnInit (): void {
         console.log( this.room_name );
-        this.message_subscription = this.chat_service.messages.subscribe( ( msg ) => {
-            if ( msg.event == 'message' ) {
-                const data: IncomingMessageDto = msg.data;
-                console.log( 'message checking', this.room_name );
-                if ( data.room == this.room_name ) {
-                    console.log( 'message saved', this.room_name );
-                    this.messages.unshift( msg.data as IncomingMessageDto );
+        this.message_subscription = this.chat_service.messages_recieved.subscribe( {
+            next: ( msg ) => {
+                if ( msg.event == 'message' ) {
+                    const data: IncomingMessageDto = msg.data;
+                    console.log( 'message checking', this.room_name );
+                    if ( data.room == this.room_name ) {
+                        console.log( 'message saved', this.room_name );
+                        this.messages.unshift( msg.data as IncomingMessageDto );
+                    }
                 }
-            }
+            },
         } );
     }
 

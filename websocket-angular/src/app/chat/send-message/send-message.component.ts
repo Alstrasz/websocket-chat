@@ -34,6 +34,6 @@ export class SendMessageComponent implements OnInit {
             },
             event: 'message',
         };
-        this.chat_service.messages.next( message );
+        this.chat_service.messages_to_send.next( message );
     }
 }

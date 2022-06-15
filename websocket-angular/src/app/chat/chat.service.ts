@@ -1,10 +1,9 @@
 import { Injectable } from '@angular/core';
-import { map } from 'rxjs/operators';
-import { Observable, Observer, Subject } from 'rxjs';
-import { AnonymousSubject } from 'rxjs/internal/Subject';
 import { WsMessage } from './types/ws_message.interface';
 import { environment } from '../../environments/environment';
 import * as axios from 'axios';
+import { OutgoingMessageDto } from './types/outgoing_message.dto';
+import { Subject } from 'rxjs';
 
 
 const CHAT_URL = environment.wsUrl;
@@ -15,37 +14,35 @@ const API_URL = environment.apiUrl;
     providedIn: 'root',
 } )
 export class ChatService {
-    private subject!: AnonymousSubject<MessageEvent>;
-    public messages: Subject<WsMessage>;
+    private ws!: WebSocket;
+    public messages_recieved!: Subject<WsMessage>;
+    public messages_to_send!: Subject<OutgoingMessageDto>;
 
     constructor () {
-        this.messages = <Subject<WsMessage>> this.connect( CHAT_URL ).pipe(
-            map(
-                ( response: MessageEvent ): WsMessage => {
-                    console.log( response.data );
-                    const data = JSON.parse( response.data );
-                    return data;
-                },
-            ),
-        );
+        this.connect( CHAT_URL );
     }
 
-    public connect ( url: string ): AnonymousSubject<MessageEvent> {
-        if ( !this.subject ) {
-            this.subject = this.create( url );
+    public connect ( url: string ) {
+        if ( !this.ws || !this.messages_recieved || !this.messages_to_send ) {
+            const data = this.create( url );
+            this.ws = data.ws;
+            this.messages_recieved = data.rx;
+            this.messages_to_send = data.tx;
             console.log( 'Successfully connected: ' + url );
         }
-        return this.subject;
     }
 
-    private create ( url: string ): AnonymousSubject<MessageEvent> {
+    private create ( url: string ) {
         const ws = new WebSocket( url );
-        const observable = new Observable( ( obs: Observer<MessageEvent> ) => {
-            ws.onmessage = obs.next.bind( obs );
-            ws.onerror = obs.error.bind( obs );
-            ws.onclose = obs.complete.bind( obs );
-            return ws.close.bind( ws );
-        } );
+        const rx: Subject<WsMessage> = new Subject<WsMessage>();
+        ws.onmessage = ( response: MessageEvent ) => {
+            console.log( response.data );
+            const data = JSON.parse( response.data );
+            rx.next( data );
+        };
+        ws.onerror = rx.error.bind( rx );
+        ws.onclose = rx.complete.bind( rx );
+        const tx: Subject<OutgoingMessageDto> = new Subject<OutgoingMessageDto>();
         const observer = {
             error: () => {},
             complete: () => {},
@@ -56,7 +53,8 @@ export class ChatService {
                 }
             },
         };
-        return new AnonymousSubject<MessageEvent>( observer, observable );
+        tx.subscribe( observer );
+        return { ws, rx, tx };
     }
 
     async get_all_rooms (): Promise<Array<string>> {
