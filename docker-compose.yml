@@ -2,31 +2,46 @@ version: "3.8"
 services:
     nest:
         image: node:16
-        container_name: websocket-simple-chat-nest
+        container_name: websocket-chat-nest
+        depends_on:
+            - postgres
         restart: "no"
         logging:
             options:
                 max-size: "50m"
         environment:
-          - PORT=8080
-          - WS_PORT=8081
-          - HOST=0.0.0.0
+            - PORT=8080
+            - WS_PORT=8081
+            - HOST=0.0.0.0
+            - POSTGRES_HOST=postgres
+            - POSTGRES_PORT=5432
         ports:
-          - 3000:8080
-          - 3001:8081
+            - 3000:8080
+            - 3001:8081
           
         volumes:
-          - ./websocket-nest:/app
+            - ./websocket-nest:/app
         command: bash -c "echo installing packages && npm install --prefix=/app && echo launching && npm run start:dev --prefix=/app"
+
+    postgres:
+        image: 'postgres:latest'
+        container_name: websocket-chat-postgres
+        ports:
+            - 5432:5432
+        environment:
+            - POSTGRES_USER=root
+            - POSTGRES_PASSWORD=root
+            - POSTGRES_DB=test
+
     angular:
         image: node:16
-        container_name: websocket-simple-chat-angular
+        container_name: websocket-chat-angular
         restart: "no"
         logging:
             options:
                 max-size: "50m"
         ports:
-          - 4200:4200
+            - 4200:4200
         volumes:
-          - ./websocket-angular:/app
+            - ./websocket-angular:/app
         command: bash -c "echo installing packages && npm install --prefix=/app && echo launching && npm run start --prefix=/app"
