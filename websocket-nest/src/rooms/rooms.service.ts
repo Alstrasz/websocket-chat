@@ -16,12 +16,7 @@ export class RoomsService {
         private roomsRepository: Repository<Room>,
     ) {
         for ( const room of DEFAULT_ROOMS ) {
-            roomsRepository.createQueryBuilder()
-                .insert()
-                .into( Room )
-                .values( room )
-                .orIgnore( true )
-                .execute();
+            roomsRepository.upsert( room, { conflictPaths: ['name'] } );
         }
     }
 
