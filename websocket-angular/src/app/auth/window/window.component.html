@@ -1,0 +1,6 @@
+<ng-container *ngIf="auth_service.user === null">
+    <auth-credentials></auth-credentials>
+</ng-container>
+<ng-container *ngIf="auth_service.user !== null">
+    <auth-controls></auth-controls>
+</ng-container>

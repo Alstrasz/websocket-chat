@@ -11,7 +11,7 @@ export class DefaultException {
 }
 
 export class ConflictException extends DefaultException {
-    type: 'conflict';
+    type: ExceptionTypes.CONFLICT;
     data: {
         name: string,
         value: any,
@@ -27,7 +27,7 @@ export class ConflictException extends DefaultException {
 }
 
 export class NotFoundException extends DefaultException {
-    type: 'not found';
+    type: ExceptionTypes.NOT_FOUND;
     data: {
         name: string,
         value: any,
@@ -43,3 +43,8 @@ export class NotFoundException extends DefaultException {
 }
 
 export type Exception = DefaultException | ConflictException | NotFoundException;
+
+export enum ExceptionTypes {
+    NOT_FOUND = 'not_found',
+    CONFLICT = 'conflict'
+}

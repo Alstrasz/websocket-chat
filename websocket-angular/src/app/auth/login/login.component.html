@@ -1,0 +1,6 @@
+<input class="input" type="text" placeholder="Username" [(ngModel)]="data.username">
+<input class="input" type="password" placeholder="Password" [(ngModel)]="data.password">
+<button class="button is-fullwidth" (click)="send_login()">Sign in</button>
+<div *ngIf="error !== ''" class="has-text-danger has-background-danger-light has-text-centered is-size-5 pt-1 pb-1">
+    {{error}}
+</div>

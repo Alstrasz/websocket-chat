@@ -1,20 +1,20 @@
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 
-import { MessageComponent } from './message.component';
+import { WindowComponent } from './window.component';
 
-describe( 'MessageComponent', () => {
-    let component: MessageComponent;
-    let fixture: ComponentFixture<MessageComponent>;
+describe( 'WindowComponent', () => {
+    let component: WindowComponent;
+    let fixture: ComponentFixture<WindowComponent>;
 
     beforeEach( async () => {
         await TestBed.configureTestingModule( {
-            declarations: [MessageComponent],
+            declarations: [WindowComponent],
         } )
             .compileComponents();
     } );
 
     beforeEach( () => {
-        fixture = TestBed.createComponent( MessageComponent );
+        fixture = TestBed.createComponent( WindowComponent );
         component = fixture.componentInstance;
         fixture.detectChanges();
     } );

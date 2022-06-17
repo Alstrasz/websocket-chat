@@ -1,0 +1,7 @@
+<input class="input" type="text" placeholder="Username" [(ngModel)]="username">
+<input class="input" type="password" placeholder="Password" [(ngModel)]="password">
+<input class="input" type="password" placeholder="Password repeat" [(ngModel)]="password_repeat">
+<button class="button is-fullwidth" (click)="send_register()">Sign in</button>
+<div *ngIf="error !== ''" class="has-text-danger has-background-danger-light has-text-centered is-size-5 pt-1 pb-1">
+    {{error}}
+</div>
