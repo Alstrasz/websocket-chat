@@ -57,4 +57,12 @@ export class AuthService {
         const payload = { username: user.username, sub: user.id };
         return this.jwt_service.sign( payload );
     }
+
+    verify_token ( token: string ) {
+        return this.jwt_service.verify( token );
+    }
+
+    decode_token ( token: string ) {
+        return this.jwt_service.decode( token );
+    }
 }

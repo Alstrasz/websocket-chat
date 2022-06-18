@@ -1,9 +1,11 @@
-import { Logger } from '@nestjs/common';
+import { Logger, UseFilters, UseGuards } from '@nestjs/common';
 import { MessageBody, OnGatewayConnection, OnGatewayDisconnect, SubscribeMessage, WebSocketGateway, WebSocketServer } from '@nestjs/websockets';
 import { OutgoingMessageDto } from './dto/outgoing_message.dto';
 import { IncomingMessageDto } from './dto/incoming_message.dto';
 import { Server, WebSocket } from 'ws';
 import { IncomingMessage } from 'http';
+import { JwtWsAuthGuard } from 'src/auth/jwt-ws-auth.guard';
+import { AuthWsExceptionsFilter } from './auth-ws-exception.filter';
 
 @WebSocketGateway( parseInt( process.env.WS_PORT || '8000' ), { transports: ['websockets'], cors: true } )
 export class ChatGateway implements OnGatewayConnection, OnGatewayDisconnect {
@@ -32,6 +34,8 @@ export class ChatGateway implements OnGatewayConnection, OnGatewayDisconnect {
         this.sockets.delete( socket );
     }
 
+    @UseGuards( JwtWsAuthGuard )
+    @UseFilters( new AuthWsExceptionsFilter() )
     @SubscribeMessage( 'message' )
     handleMessage ( @MessageBody() incoming_message: IncomingMessageDto ): void {
         this.logger.debug( JSON.stringify( incoming_message ) );

@@ -1,11 +1,6 @@
 export class OutgoingMessageDto {
-    data: {
-        author: string;
-        message: string;
-        room: string;
-        timestamp: number;
-    };
-    event: string;
+    data: OutgoingMessageData;
+    event: 'message';
 
     constructor ( data: OutgoingMessageData ) {
         this.data = data;
