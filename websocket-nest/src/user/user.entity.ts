@@ -1,5 +1,5 @@
 import { nanoid } from 'nanoid';
-import { Entity, Column, PrimaryColumn } from 'typeorm';
+import { Entity, Column, PrimaryColumn, CreateDateColumn } from 'typeorm';
 
 @Entity()
 export class User {
@@ -14,4 +14,7 @@ export class User {
 
     @Column( { type: 'varchar', length: 16 } )
         salt: string;
+
+    @CreateDateColumn( { update: false } )
+        creation_time: Date;
 }

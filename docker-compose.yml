@@ -15,6 +15,7 @@ services:
             - HOST=0.0.0.0
             - POSTGRES_HOST=postgres
             - POSTGRES_PORT=5432
+            - JWT_SECRET=secret
         ports:
             - 3000:8080
             - 3001:8081
@@ -26,12 +27,18 @@ services:
     postgres:
         image: 'postgres:latest'
         container_name: websocket-chat-postgres
+        restart: "no"
+        logging:
+            options:
+                max-size: "50m"
         ports:
             - 5432:5432
         environment:
             - POSTGRES_USER=root
             - POSTGRES_PASSWORD=root
             - POSTGRES_DB=test
+        volumes:
+            - ./db-data/:/var/lib/postgresql/data/
 
     angular:
         image: node:16

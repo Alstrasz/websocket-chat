@@ -31,6 +31,14 @@ export class UserService {
         return res;
     }
 
+    async get_by_id ( id: string ): Promise<User> {
+        const res = await this.roomsRepository.findOne( { where: { id } } );
+        if ( res === null ) {
+            throw new NotFoundException( 'id', id );
+        }
+        return res;
+    }
+
     async create_user ( user_credentials_dto: UserCredentialsDto ) {
         const { hash, salt } = this.auth_service.create_hash_salt( user_credentials_dto.password );
         const user_data: Partial<User> = {

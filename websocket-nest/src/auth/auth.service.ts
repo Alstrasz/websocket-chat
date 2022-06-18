@@ -1,4 +1,5 @@
 import { forwardRef, Inject, Injectable } from '@nestjs/common';
+import { JwtService } from '@nestjs/jwt';
 import { HmacSHA512 } from 'crypto-js';
 import { lib as crypto_lib } from 'crypto-js';
 import { Exception, ExceptionTypes } from 'src/exception.interface';
@@ -11,6 +12,7 @@ export class AuthService {
     constructor (
         @Inject( forwardRef( ()=> UserService ) )
         private user_service: UserService,
+        private jwt_service: JwtService,
     ) {}
 
     private sha512 ( password: string, salt: string ) {
@@ -41,5 +43,18 @@ export class AuthService {
                     return null;
                 }
             } );
+    }
+
+
+    /**
+     * Issues JWT token
+     *
+     * @param {User} user
+     * @return {*}
+     * @memberof AuthService
+     */
+    login ( user: User ): string {
+        const payload = { username: user.username, sub: user.id };
+        return this.jwt_service.sign( payload );
     }
 }
