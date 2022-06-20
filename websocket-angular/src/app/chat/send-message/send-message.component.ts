@@ -11,11 +11,10 @@ import { AuthService } from 'src/app/auth/auth.service';
 export class SendMessageComponent implements OnInit {
     @Input() active_room_name: string = '';
     message: string = '';
-    username: string = '';
 
     constructor (
         private chat_service: ChatService,
-        private auth_serivce: AuthService,
+        public auth_serivce: AuthService,
     ) {}
 
     ngOnInit (): void {
@@ -26,10 +25,6 @@ export class SendMessageComponent implements OnInit {
             alert( 'Message should not be empty' );
             return;
         }
-        if ( this.username.trim() == '' ) {
-            alert( 'Username should not be empty' );
-            return;
-        }
         if ( this.auth_serivce.token === null ) {
             alert( 'You should be signed in' );
             return;
@@ -38,7 +33,6 @@ export class SendMessageComponent implements OnInit {
             data: {
                 Authorization: this.auth_serivce.token,
                 message: this.message,
-                author: this.username,
                 room: this.active_room_name,
             },
             event: 'message',

@@ -4,6 +4,7 @@ import { Injectable, UnauthorizedException } from '@nestjs/common';
 import { jwt_constants } from './constants';
 import { UserService } from 'src/user/user.service';
 import { ExceptionTypes } from 'src/exception.interface';
+import { JwtPayload } from './interfaces/jwt_payload.interface';
 
 @Injectable()
 export class JwtStrategy extends PassportStrategy( Strategy ) {
@@ -17,7 +18,7 @@ export class JwtStrategy extends PassportStrategy( Strategy ) {
         } );
     }
 
-    async validate ( payload: { sub: string, username: string } ) {
+    async validate ( payload: JwtPayload ) {
         const user = await this.user_serivce.get_by_id( payload.sub )
             .catch( ( err ) => {
                 if ( err.type == ExceptionTypes.NOT_FOUND ) {

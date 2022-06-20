@@ -2,6 +2,7 @@ import { Injectable, CanActivate, ExecutionContext } from '@nestjs/common';
 import { WsException } from '@nestjs/websockets';
 import { Observable } from 'rxjs';
 import { AuthService } from './auth.service';
+import { JwtPayload } from './interfaces/jwt_payload.interface';
 
 @Injectable()
 export class JwtWsAuthGuard implements CanActivate {
@@ -16,11 +17,11 @@ export class JwtWsAuthGuard implements CanActivate {
             throw new WsException( { code: 401, description: 'No Authorization field' } );
         }
         try {
-            const payload = this.auth_service.verify_token( token );
+            const payload: JwtPayload = this.auth_service.verify_token( token );
             if ( !payload ) {
                 throw new WsException( { code: 401, description: 'JWT token no valid' } );
             }
-            context.switchToWs().getClient().payload = payload;
+            context.switchToWs().getData().Authorization = payload;
             return true;
         } catch ( e ) {
             throw new WsException( { status: 'error', code: 401, description: 'JWT token no valid' } );

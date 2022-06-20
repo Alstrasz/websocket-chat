@@ -6,6 +6,7 @@ import { Server, WebSocket } from 'ws';
 import { IncomingMessage } from 'http';
 import { JwtWsAuthGuard } from 'src/auth/jwt-ws-auth.guard';
 import { AuthWsExceptionsFilter } from './auth-ws-exception.filter';
+import { WsWithCredentials } from 'src/auth/interfaces/ws_with_credentials.interface';
 
 @WebSocketGateway( parseInt( process.env.WS_PORT || '8000' ), { transports: ['websockets'], cors: true } )
 export class ChatGateway implements OnGatewayConnection, OnGatewayDisconnect {
@@ -37,10 +38,10 @@ export class ChatGateway implements OnGatewayConnection, OnGatewayDisconnect {
     @UseGuards( JwtWsAuthGuard )
     @UseFilters( new AuthWsExceptionsFilter() )
     @SubscribeMessage( 'message' )
-    handleMessage ( @MessageBody() incoming_message: IncomingMessageDto ): void {
+    handleMessage ( @MessageBody() incoming_message: WsWithCredentials<IncomingMessageDto> ): void {
         this.logger.debug( JSON.stringify( incoming_message ) );
         const outgoing_message = new OutgoingMessageDto( {
-            author: incoming_message.author,
+            author: incoming_message.Authorization.username,
             message: incoming_message.message,
             room: incoming_message.room,
             timestamp: Math.floor( Date.now() / 1000 ),
