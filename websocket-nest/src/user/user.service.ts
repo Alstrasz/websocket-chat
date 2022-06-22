@@ -2,6 +2,7 @@ import { forwardRef, Inject, Injectable } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { AuthService } from 'src/auth/auth.service';
 import { UserCredentialsDto } from 'src/auth/dto/user_credentials.dto';
+import { DbErrorCodes } from 'src/db_error_codes.enum';
 import { ConflictException, NotFoundException } from 'src/exception.interface';
 import { Repository } from 'typeorm';
 import { User } from './user.entity';
@@ -48,7 +49,7 @@ export class UserService {
         };
         const user = this.roomsRepository.create( user_data );
         return this.roomsRepository.save( user ).catch( ( err ) => {
-            if ( err.code == 23505 ) { // Duplicate key value violates unique constraint
+            if ( err.code == DbErrorCodes.CONFLICT ) {
                 throw new ConflictException( 'username', user_credentials_dto.username );
             }
             throw err;

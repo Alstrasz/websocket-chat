@@ -1,0 +1,8 @@
+<a [ngClass]="{'is-active': is_active}" (click)="toggle_active()">Create room</a>
+<ul *ngIf="is_active">
+    <input class="input is-fullwidth" type="text" placeholder="Room name" [(ngModel)]="room_name">
+    <button class="button is-fullwidth" (click)="execute()">Execute</button>
+    <p *ngIf="message != ''" class="has-text-danger has-background-danger-light has-text-centered is-size-6 pt-1 pb-1">
+        {{message}}
+    </p>
+</ul>

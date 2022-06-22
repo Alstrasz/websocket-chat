@@ -7,6 +7,8 @@ import { IncomingMessage } from 'http';
 import { JwtWsAuthGuard } from 'src/auth/jwt-ws-auth.guard';
 import { AuthWsExceptionsFilter } from './auth-ws-exception.filter';
 import { WsWithCredentials } from 'src/auth/interfaces/ws_with_credentials.interface';
+import { GroupModificationDto } from './dto/group_modification.dto';
+import { RoomsService } from 'src/rooms/rooms.service';
 
 @WebSocketGateway( parseInt( process.env.WS_PORT || '8000' ), { transports: ['websockets'], cors: true } )
 export class ChatGateway implements OnGatewayConnection, OnGatewayDisconnect {
@@ -16,8 +18,11 @@ export class ChatGateway implements OnGatewayConnection, OnGatewayDisconnect {
         server!: Server;
     private readonly logger = new Logger( ChatGateway.name );
 
+    constructor ( private rooms_service: RoomsService ) { }
+
     afterInit ( _server: Server ) {
-        // throw new Error('Method not implemented.'); - comment this
+        this.rooms_service.notify_group_creation = this.notify_group_creation.bind( this );
+        this.rooms_service.notify_group_deletion = this.notify_group_deletion.bind( this );
         this.logger.debug( 'Initialized' );
     }
 
@@ -35,6 +40,26 @@ export class ChatGateway implements OnGatewayConnection, OnGatewayDisconnect {
         this.sockets.delete( socket );
     }
 
+    notify_group_creation ( name: string ) {
+        this.braodcast_to_all( new GroupModificationDto( {
+            action: 'created',
+            name: name,
+        } ) );
+    }
+
+    notify_group_deletion ( name: string ) {
+        this.braodcast_to_all( new GroupModificationDto( {
+            action: 'deleted',
+            name: name,
+        } ) );
+    }
+
+    braodcast_to_all ( message ) {
+        this.server.clients.forEach( ( client ) => {
+            client.send( JSON.stringify( message ) );
+        } );
+    }
+
     @UseGuards( JwtWsAuthGuard )
     @UseFilters( new AuthWsExceptionsFilter() )
     @SubscribeMessage( 'message' )
@@ -46,8 +71,6 @@ export class ChatGateway implements OnGatewayConnection, OnGatewayDisconnect {
             room: incoming_message.room,
             timestamp: Math.floor( Date.now() / 1000 ),
         } );
-        this.server.clients.forEach( ( client ) => {
-            client.send( JSON.stringify( outgoing_message ) );
-        } );
+        this.braodcast_to_all( outgoing_message );
     }
 }

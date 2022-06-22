@@ -6,6 +6,10 @@ import { SendMessageComponent } from './send-message/send-message.component';
 import { MessageCollectionComponent } from './message-collection/message-collection.component';
 import { FormsModule } from '@angular/forms';
 import { AuthModule } from '../auth/auth.module';
+import { ActionsComponent } from './actions/actions.component';
+import { ActionDeleteRoomComponent } from './action-delete-room/action-delete-room.component';
+import { ActionCreateRoomComponent } from './action-create-room/action-create-room.component';
+import { ActionDefaultComponent } from './action-default/action-default.component';
 
 
 @NgModule( {
@@ -14,6 +18,10 @@ import { AuthModule } from '../auth/auth.module';
         WindowComponent,
         SendMessageComponent,
         MessageCollectionComponent,
+        ActionsComponent,
+        ActionDeleteRoomComponent,
+        ActionCreateRoomComponent,
+        ActionDefaultComponent,
     ],
     imports: [
         CommonModule,

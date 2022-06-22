@@ -1,0 +1,5 @@
+<a [ngClass]="{'is-active': is_active}" (click)="toggle_active()">Delete room</a>
+<ul *ngIf="is_active">
+    <input class="input is-fullwidth" type="text" placeholder="Room name" [(ngModel)]="room_name">
+    <button class="button is-fullwidth is-danger" (click)="execute()">Execute</button>
+</ul>

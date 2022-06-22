@@ -60,13 +60,52 @@ export class ChatService {
     async get_all_rooms (): Promise<Array<string>> {
         return axios.default( {
             baseURL: API_URL,
-            url: '/rooms/all',
-            method: 'get',
+            url: '/rooms/',
+            method: 'GET',
         } )
             .then( ( res ) => {
                 return res.data;
             } )
             .catch( ( err ) => {
+                console.log( err );
+                throw err;
+            } );
+    }
+
+    async delete_room ( name: string ) {
+        return axios.default( {
+            baseURL: API_URL,
+            url: '/rooms/',
+            method: 'DELETE',
+            data: {
+                name: name,
+            },
+        } )
+            .then( ( res ) => {
+                return res.data;
+            } )
+            .catch( ( err ) => {
+                console.log( err );
+                throw err;
+            } );
+    }
+
+    async create_room ( name: string ) {
+        return axios.default( {
+            baseURL: API_URL,
+            url: '/rooms/',
+            method: 'POST',
+            data: {
+                name: name,
+            },
+        } )
+            .then( ( ) => {
+                return;
+            } )
+            .catch( ( err ) => {
+                if ( err && ( err.response.status == 400 || err.response.status == 409 ) ) {
+                    return err.response.data.description;
+                }
                 console.log( err );
                 throw err;
             } );

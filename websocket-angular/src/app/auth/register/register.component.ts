@@ -19,6 +19,7 @@ export class RegisterComponent implements OnInit {
     }
 
     send_register () {
+        this.error = '';
         if ( this.username.length < 4 ) {
             this.error = 'Username should contain at lest 4 symbols';
             return;

@@ -18,6 +18,7 @@ export class LoginComponent implements OnInit {
     }
 
     send_login () {
+        this.error = '';
         this.auth_service.login( this.data )
             .then( ( val: boolean ) => {
                 if ( val ) {
