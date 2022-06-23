@@ -1,6 +1,7 @@
 import { Component, OnDestroy, OnInit } from '@angular/core';
 import * as _ from 'lodash';
 import { Subscription } from 'rxjs';
+import { AuthService } from 'src/app/auth/auth.service';
 import { ChatService } from '../chat.service';
 import { GroupModificationDto } from '../types/group_modification.dto';
 
@@ -14,7 +15,10 @@ export class WindowComponent implements OnInit, OnDestroy {
     active_room = '';
     message_subscription!: Subscription;
 
-    constructor ( private chat_service: ChatService ) { }
+    constructor (
+        private chat_service: ChatService,
+        public auth_service: AuthService,
+    ) { }
 
     ngOnInit (): void {
         this.chat_service.get_all_rooms().then( ( rooms ) => {

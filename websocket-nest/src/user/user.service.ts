@@ -7,8 +7,8 @@ import { ConflictException, NotFoundException } from 'src/exception.interface';
 import { Repository } from 'typeorm';
 import { User } from './user.entity';
 
-const DEFAULT_USERS = [
-    { username: 'Admin', password: 'a' },
+const DEFAULT_USERS: Array<UserCredentialsDto> = [
+    { username: 'Admin', password: 'qwerty' },
 ];
 
 @Injectable()

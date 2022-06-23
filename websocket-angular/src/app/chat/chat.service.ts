@@ -4,6 +4,7 @@ import { environment } from '../../environments/environment';
 import * as axios from 'axios';
 import { OutgoingMessageDto } from './types/outgoing_message.dto';
 import { Subject } from 'rxjs';
+import { AuthService } from '../auth/auth.service';
 
 
 const CHAT_URL = environment.wsUrl;
@@ -18,7 +19,9 @@ export class ChatService {
     public messages_recieved!: Subject<WsMessage>;
     public messages_to_send!: Subject<OutgoingMessageDto>;
 
-    constructor () {
+    constructor (
+        private auth_service: AuthService,
+    ) {
         this.connect( CHAT_URL );
     }
 
@@ -80,6 +83,9 @@ export class ChatService {
             data: {
                 name: name,
             },
+            headers: {
+                Authorization: 'Bearer ' + this.auth_service.token,
+            },
         } )
             .then( ( res ) => {
                 return res.data;
@@ -97,6 +103,9 @@ export class ChatService {
             method: 'POST',
             data: {
                 name: name,
+            },
+            headers: {
+                Authorization: 'Bearer ' + this.auth_service.token,
             },
         } )
             .then( ( ) => {
